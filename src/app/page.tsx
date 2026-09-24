@@ -8,7 +8,6 @@ import {
   MapPin,
   ShieldCheck,
   Zap,
-  Sparkles,
   Lock,
   Timer,
   AlertCircle,
@@ -175,9 +174,6 @@ export default function AvailabilityPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4FE2B]/10 border border-[#D4FE2B]/30 text-[#D4FE2B] text-xs font-semibold">
-                <Sparkles className="w-3.5 h-3.5" /> Garansi Zero Double-Booking dengan Pessimistic Lock
-              </div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white">
                 Booking Lapangan Padel <span className="text-[#D4FE2B]">Real-Time</span>
               </h1>
