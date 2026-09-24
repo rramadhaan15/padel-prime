@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { LampContainer } from "@/components/ui/lamp";
 import {
   Calendar,
   Clock,
@@ -169,42 +171,75 @@ export default function AvailabilityPage() {
         </div>
       </header>
 
-      {/* Hero Announcement */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#121A26] to-[#0B0F17] border-b border-[#1F2B3E]/60 py-10 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="space-y-2">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white">
-                Booking Lapangan Padel <span className="text-[#D4FE2B]">Real-Time</span>
-              </h1>
-              <p className="text-slate-400 text-sm sm:text-base max-w-2xl">
-                Pilih slot jadwal Anda dalam rolling 7 hari ke depan. Nikmati kemudahan booking tanpa registrasi akun,
-                pembayaran instan via QRIS/VA, dan perlindungan slot otomatis 10 menit saat checkout.
-              </p>
+      {/* Lamp Hero Section */}
+      <section className="relative w-full overflow-hidden bg-slate-950 border-b border-[#1F2B3E]">
+        <LampContainer className="pt-24 min-h-[580px] md:min-h-[640px]">
+          <motion.div
+            initial={{ opacity: 0.5, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: 0.2,
+              duration: 0.8,
+              ease: "easeInOut",
+            }}
+            className="flex flex-col items-center text-center max-w-4xl mx-auto px-4"
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold uppercase tracking-widest mb-4 backdrop-blur-md">
+              <Zap className="w-3.5 h-3.5 text-[#D4FE2B]" /> Jakarta&apos;s Premier Padel Club
             </div>
 
-            {/* Quick Club Info Card */}
-            <div className="bg-[#121A26]/80 border border-[#1F2B3E] rounded-2xl p-4 sm:p-5 flex flex-col gap-3 min-w-[280px]">
-              <div className="flex items-center justify-between text-xs text-slate-400">
-                <span>Jam Operasional</span>
-                <span className="text-emerald-400 font-bold flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Buka Hari Ini
-                </span>
+            <h1 className="bg-gradient-to-br from-slate-100 via-slate-200 to-slate-400 py-2 bg-clip-text text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-transparent">
+              Booking Lapangan Padel <br />
+              <span className="text-[#D4FE2B] drop-shadow-[0_0_35px_rgba(212,254,43,0.35)]">
+                Real-Time & Bebas Antre
+              </span>
+            </h1>
+
+            <p className="mt-3 text-slate-300 text-sm sm:text-base max-w-2xl leading-relaxed">
+              Jadwal akurat dalam rentang 7 hari rolling. Tanpa registrasi akun,
+              pembayaran instan QRIS/VA, dan perlindungan slot otomatis 10 menit saat checkout.
+            </p>
+
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <a
+                href="#jadwal"
+                className="px-7 py-3 rounded-xl bg-[#D4FE2B] text-black font-extrabold text-xs sm:text-sm hover:brightness-110 transition shadow-glow flex items-center gap-2"
+              >
+                Pilih Jadwal Sekarang <ChevronRight className="w-4 h-4" />
+              </a>
+              <button
+                onClick={() => router.push("/staff")}
+                className="px-5 py-3 rounded-xl bg-[#121A26]/80 hover:bg-[#182334] text-slate-200 hover:text-white font-bold text-xs sm:text-sm border border-[#1F2B3E] transition backdrop-blur-md flex items-center gap-2"
+              >
+                <ShieldCheck className="w-4 h-4 text-[#22D3EE]" /> Portal Staf
+              </button>
+            </div>
+
+            {/* Quick Club Info Row */}
+            <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full max-w-2xl text-left">
+              <div className="p-3 rounded-xl bg-[#121A26]/80 border border-[#1F2B3E]/80 backdrop-blur-md">
+                <span className="text-[10px] text-slate-400 block">Total Lapangan</span>
+                <span className="text-sm font-extrabold text-white">4 Courts (2 In / 2 Out)</span>
               </div>
-              <div className="text-lg font-bold text-white flex items-center gap-2">
-                <Clock className="w-5 h-5 text-[#D4FE2B]" /> 06:00 - 23:00 WIB
+              <div className="p-3 rounded-xl bg-[#121A26]/80 border border-[#1F2B3E]/80 backdrop-blur-md">
+                <span className="text-[10px] text-slate-400 block">Durasi Main</span>
+                <span className="text-sm font-extrabold text-[#D4FE2B]">90 Menit / Slot</span>
               </div>
-              <div className="text-xs text-slate-400 border-t border-[#1F2B3E] pt-2 flex justify-between">
-                <span>Total Lapangan:</span>
-                <span className="text-white font-semibold">2 Indoor & 2 Outdoor</span>
+              <div className="p-3 rounded-xl bg-[#121A26]/80 border border-[#1F2B3E]/80 backdrop-blur-md">
+                <span className="text-[10px] text-slate-400 block">Jam Operasional</span>
+                <span className="text-sm font-extrabold text-cyan-300">06:00 - 23:00 WIB</span>
+              </div>
+              <div className="p-3 rounded-xl bg-[#121A26]/80 border border-[#1F2B3E]/80 backdrop-blur-md">
+                <span className="text-[10px] text-slate-400 block">Pembayaran</span>
+                <span className="text-sm font-extrabold text-emerald-400">QRIS & VA Dinamis</span>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </LampContainer>
       </section>
 
       {/* Main Booking Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 w-full flex-1">
+      <main id="jadwal" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 w-full flex-1">
         {/* 7-Day Rolling Advance Date Carousel */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-3">

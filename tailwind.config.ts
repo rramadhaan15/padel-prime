@@ -5,6 +5,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   darkMode: "class",
   theme: {
@@ -20,6 +21,9 @@ const config: Config = {
           hover: "#1A2536",
           accent: "#22D3EE",
         },
+      },
+      backgroundImage: {
+        "gradient-conic": "conic-gradient(var(--tw-gradient-stops))",
       },
       boxShadow: {
         glow: "0 0 25px -5px rgba(212, 254, 43, 0.3)",
