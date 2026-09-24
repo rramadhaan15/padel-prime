@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0b0f17;
+  --foreground: #f8fafc;
+  --padel-neon: #d4fe2b;
+  --padel-card: #121a26;
+  --padel-border: #1f2b3e;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  min-height: 100vh;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0f17;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f2b3e;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2e3e57;
+}
+
+.glow-card {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.7);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glow-card:hover {
+  box-shadow: 0 10px 30px -5px rgba(212, 254, 43, 0.15);
+  border-color: rgba(212, 254, 43, 0.4);
+}
