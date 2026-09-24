@@ -173,14 +173,13 @@ export default function AvailabilityPage() {
 
       {/* Lamp Hero Section */}
       <section className="relative w-full overflow-hidden bg-slate-950 border-b border-[#1F2B3E]">
-        <LampContainer className="pt-20 pb-12 min-h-[580px] md:min-h-[640px]" contentClassName="-translate-y-28 sm:-translate-y-36">
+        <LampContainer>
           <motion.div
-            initial={{ opacity: 0.5, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{
-              delay: 0.2,
-              duration: 0.8,
-              ease: "easeInOut",
+              duration: 0.7,
+              ease: "easeOut",
             }}
             className="flex flex-col items-center text-center max-w-4xl mx-auto px-4"
           >
