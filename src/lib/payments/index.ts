@@ -82,7 +82,11 @@ export interface PaymentInitiationResult {
 }
 
 // In-memory simulated gateway ledger for inquiry and webhooks
-const gatewayLedger = new Map<string, { status: "pending" | "settled" | "expired"; amount: number }>();
+const globalForPayments = globalThis as unknown as {
+  __padelGatewayLedger?: Map<string, { status: "pending" | "settled" | "expired"; amount: number }>;
+};
+const gatewayLedger = globalForPayments.__padelGatewayLedger ?? new Map();
+globalForPayments.__padelGatewayLedger = gatewayLedger;
 
 export function getGatewayLedgerEntry(orderId: string) {
   return gatewayLedger.get(orderId);

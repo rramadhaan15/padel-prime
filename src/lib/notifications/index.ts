@@ -23,8 +23,14 @@ export interface EmailDispatchEvent {
   dispatchedAt: Date;
 }
 
-const whatsappLog: WhatsAppDispatchEvent[] = [];
-const emailLog: EmailDispatchEvent[] = [];
+const globalForNotifications = globalThis as unknown as {
+  __padelWhatsAppLog?: WhatsAppDispatchEvent[];
+  __padelEmailLog?: EmailDispatchEvent[];
+};
+const whatsappLog: WhatsAppDispatchEvent[] = globalForNotifications.__padelWhatsAppLog ?? [];
+const emailLog: EmailDispatchEvent[] = globalForNotifications.__padelEmailLog ?? [];
+globalForNotifications.__padelWhatsAppLog = whatsappLog;
+globalForNotifications.__padelEmailLog = emailLog;
 
 export function getWhatsAppLog(): WhatsAppDispatchEvent[] {
   return [...whatsappLog];

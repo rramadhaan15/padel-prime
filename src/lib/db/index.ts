@@ -1,3 +1,6 @@
+import fs from "fs";
+import path from "path";
+
 export type CourtType = "Indoor" | "Outdoor";
 export type TimeBand = "Regular" | "Peak";
 export type SlotStatus = "open" | "held" | "booked" | "blocked";
@@ -88,8 +91,17 @@ export interface EquipmentPoolRecord {
   soldBalls: number;
 }
 
-// In-Memory Database Store for robust, deterministic testing and runtime
-class DatabaseStore {
+interface SerializedStoreData {
+  venue: VenueRecord;
+  courts: Record<string, CourtRecord>;
+  slots: Record<string, ScheduleSlotRecord>;
+  holds: Record<string, Omit<SlotHoldRecord, "expiresAt" | "createdAt"> & { expiresAt: string; createdAt: string }>;
+  bookings: Record<string, Omit<BookingRecord, "createdAt" | "checkedInAt"> & { createdAt: string; checkedInAt?: string | null }>;
+  customers: Record<string, Omit<CustomerRecord, "createdAt"> & { createdAt: string }>;
+  equipment: Record<string, EquipmentPoolRecord>;
+}
+
+export class DatabaseStore {
   private venue: VenueRecord;
   private courts: Map<string, CourtRecord> = new Map();
   private slots: Map<string, ScheduleSlotRecord> = new Map();
@@ -106,10 +118,107 @@ class DatabaseStore {
       openingTime: "06:00",
       closingTime: "23:00",
     };
-    this.seedDefaultData();
+
+    const loaded = this.loadFromFile();
+    if (!loaded) {
+      this.seedDefaultData();
+      this.persistToFile();
+    }
   }
 
-  public reset() {
+  private getStoreFilePath(): string {
+    return path.resolve(process.cwd(), ".data", "db_store.json");
+  }
+
+  private loadFromFile(): boolean {
+    try {
+      const filePath = this.getStoreFilePath();
+      if (!fs.existsSync(filePath)) return false;
+
+      const raw = fs.readFileSync(filePath, "utf-8");
+      const parsed = JSON.parse(raw) as SerializedStoreData;
+      if (!parsed || !parsed.venue) return false;
+
+      this.venue = parsed.venue;
+      if (parsed.courts) this.courts = new Map(Object.entries(parsed.courts));
+      if (parsed.slots) this.slots = new Map(Object.entries(parsed.slots));
+      if (parsed.holds) {
+        const holdEntries: Array<[string, SlotHoldRecord]> = Object.entries(parsed.holds).map(([k, v]) => [
+          k,
+          { ...v, expiresAt: new Date(v.expiresAt), createdAt: new Date(v.createdAt) },
+        ]);
+        this.holds = new Map(holdEntries);
+      }
+      if (parsed.bookings) {
+        const bookingEntries: Array<[string, BookingRecord]> = Object.entries(parsed.bookings).map(([k, v]) => [
+          k,
+          {
+            ...v,
+            createdAt: new Date(v.createdAt),
+            checkedInAt: v.checkedInAt ? new Date(v.checkedInAt) : null,
+          },
+        ]);
+        this.bookings = new Map(bookingEntries);
+      }
+      if (parsed.customers) {
+        const custEntries: Array<[string, CustomerRecord]> = Object.entries(parsed.customers).map(([k, v]) => [
+          k,
+          { ...v, createdAt: new Date(v.createdAt) },
+        ]);
+        this.customers = new Map(custEntries);
+      }
+      if (parsed.equipment) this.equipment = new Map(Object.entries(parsed.equipment));
+
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  private persistToFile(): void {
+    try {
+      const filePath = this.getStoreFilePath();
+      const dir = path.dirname(filePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+
+      const payload: SerializedStoreData = {
+        venue: this.venue,
+        courts: Object.fromEntries(this.courts.entries()),
+        slots: Object.fromEntries(this.slots.entries()),
+        holds: Object.fromEntries(
+          Array.from(this.holds.entries()).map(([k, v]) => [
+            k,
+            { ...v, expiresAt: new Date(v.expiresAt).toISOString(), createdAt: new Date(v.createdAt).toISOString() },
+          ])
+        ),
+        bookings: Object.fromEntries(
+          Array.from(this.bookings.entries()).map(([k, v]) => [
+            k,
+            {
+              ...v,
+              createdAt: new Date(v.createdAt).toISOString(),
+              checkedInAt: v.checkedInAt ? new Date(v.checkedInAt).toISOString() : null,
+            },
+          ])
+        ),
+        customers: Object.fromEntries(
+          Array.from(this.customers.entries()).map(([k, v]) => [
+            k,
+            { ...v, createdAt: new Date(v.createdAt).toISOString() },
+          ])
+        ),
+        equipment: Object.fromEntries(this.equipment.entries()),
+      };
+
+      fs.writeFileSync(filePath, JSON.stringify(payload, null, 2), "utf-8");
+    } catch {
+      // In environment with restricted FS, continue with in-memory state
+    }
+  }
+
+  public reset(): void {
     this.courts.clear();
     this.slots.clear();
     this.holds.clear();
@@ -117,9 +226,10 @@ class DatabaseStore {
     this.customers.clear();
     this.equipment.clear();
     this.seedDefaultData();
+    this.persistToFile();
   }
 
-  private seedDefaultData() {
+  private seedDefaultData(): void {
     const courtList: CourtRecord[] = [
       { id: "court-1", venueId: this.venue.id, name: "Court 1 - Grand Arena", type: "Indoor", isActive: true },
       { id: "court-2", venueId: this.venue.id, name: "Court 2 - Pro Indoor", type: "Indoor", isActive: true },
@@ -153,12 +263,10 @@ class DatabaseStore {
       for (const court of courtList) {
         for (const t of times) {
           const slotId = `slot-${court.id}-${dateStr}-${t.start.replace(":", "")}`;
-          // Weekend check: Saturday (6) or Sunday (0) are Peak in afternoon/evening or weekend rates
           const isWeekend = targetDate.getDay() === 0 || targetDate.getDay() === 6;
           const effectiveBand: TimeBand = isWeekend && parseInt(t.start.split(":")[0]) >= 8 ? "Peak" : t.band;
 
-          // Price calculation based on CourtType & TimeBand
-          let price = 250000; // Base outdoor regular
+          let price = 250000;
           if (court.type === "Indoor") {
             price = effectiveBand === "Peak" ? 450000 : 350000;
           } else {
@@ -209,17 +317,20 @@ class DatabaseStore {
     slot.status = status;
     slot.blockReason = blockReason ?? null;
     this.slots.set(id, slot);
+    this.persistToFile();
     return slot;
   }
 
   public createSlot(slot: ScheduleSlotRecord): ScheduleSlotRecord {
     this.slots.set(slot.id, slot);
+    this.persistToFile();
     return slot;
   }
 
   // Slot Holds
   public createSlotHold(hold: SlotHoldRecord): SlotHoldRecord {
     this.holds.set(hold.id, hold);
+    this.persistToFile();
     return hold;
   }
 
@@ -238,6 +349,7 @@ class DatabaseStore {
     if (!hold) throw new Error(`SlotHold not found: ${id}`);
     const updated = { ...hold, ...updates };
     this.holds.set(id, updated);
+    this.persistToFile();
     return updated;
   }
 
@@ -258,6 +370,7 @@ class DatabaseStore {
   // Bookings
   public createBooking(booking: BookingRecord): BookingRecord {
     this.bookings.set(booking.id, booking);
+    this.persistToFile();
     return booking;
   }
 
@@ -291,6 +404,7 @@ class DatabaseStore {
     if (!booking) throw new Error(`Booking not found: ${id}`);
     const updated = { ...booking, ...updates };
     this.bookings.set(id, updated);
+    this.persistToFile();
     return updated;
   }
 
@@ -305,6 +419,7 @@ class DatabaseStore {
       existing.name = data.name;
       existing.email = data.email;
       this.customers.set(data.phone, existing);
+      this.persistToFile();
       return existing;
     }
     const newCustomer: CustomerRecord = {
@@ -316,6 +431,7 @@ class DatabaseStore {
       createdAt: new Date(),
     };
     this.customers.set(data.phone, newCustomer);
+    this.persistToFile();
     return newCustomer;
   }
 
@@ -333,6 +449,7 @@ class DatabaseStore {
       customer.isFlagged = true;
     }
     this.customers.set(phone, customer);
+    this.persistToFile();
     return customer;
   }
 
@@ -345,12 +462,13 @@ class DatabaseStore {
         id: `pool-${key}`,
         date,
         timeSlot,
-        totalRackets: 24, // 24 rackets physical venue stock
+        totalRackets: 24,
         rentedRackets: 0,
-        totalBalls: 100, // 100 cans ball stock
+        totalBalls: 100,
         soldBalls: 0,
       };
       this.equipment.set(key, pool);
+      this.persistToFile();
     }
     return pool;
   }
@@ -371,9 +489,15 @@ class DatabaseStore {
     pool.rentedRackets = Math.max(0, pool.rentedRackets + deltaRackets);
     pool.soldBalls = Math.max(0, pool.soldBalls + deltaBalls);
     this.equipment.set(`${date}_${timeSlot}`, pool);
+    this.persistToFile();
     return pool;
   }
 }
 
-// Singleton database instance
-export const db = new DatabaseStore();
+// Preserve Singleton across Next.js module re-evaluations and re-compilations
+const globalForDb = globalThis as unknown as {
+  __padelDb?: DatabaseStore;
+};
+
+export const db: DatabaseStore = globalForDb.__padelDb ?? new DatabaseStore();
+globalForDb.__padelDb = db;

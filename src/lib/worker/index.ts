@@ -19,7 +19,11 @@ export interface ConflictAlert {
 }
 
 // In-memory conflict alerts for staff dashboard
-const conflictAlerts: ConflictAlert[] = [];
+const globalForWorker = globalThis as unknown as {
+  __padelConflictAlerts?: ConflictAlert[];
+};
+const conflictAlerts: ConflictAlert[] = globalForWorker.__padelConflictAlerts ?? [];
+globalForWorker.__padelConflictAlerts = conflictAlerts;
 
 export function listConflictAlerts(): ConflictAlert[] {
   return [...conflictAlerts];

@@ -66,7 +66,11 @@ class InMemoryRedisStore {
   }
 }
 
-const memoryRedis = new InMemoryRedisStore();
+const globalForRedis = globalThis as unknown as {
+  __padelMemoryRedis?: InMemoryRedisStore;
+};
+const memoryRedis = globalForRedis.__padelMemoryRedis ?? new InMemoryRedisStore();
+globalForRedis.__padelMemoryRedis = memoryRedis;
 let realRedisClient: Redis | null = null;
 
 // Connect to real Redis if REDIS_URL or REDIS_HOST is explicitly provided
