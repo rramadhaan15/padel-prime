@@ -141,21 +141,27 @@ export default function AvailabilityPage() {
   return (
     <div className="min-h-screen bg-[#0B0F17] text-slate-100 flex flex-col font-sans pb-20">
       {/* Transparent Floating Navbar */}
-      <header className="absolute top-0 left-0 right-0 z-40 bg-gradient-to-b from-[#0B0F17]/70 via-transparent to-transparent border-none">
+      <header className="absolute top-2 sm:top-3.5 left-0 right-0 z-40 bg-gradient-to-b from-[#0B0F17]/80 via-transparent to-transparent border-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#D4FE2B] to-[#10B981] flex items-center justify-center shadow-glow">
-              <Zap className="w-6 h-6 text-black font-black" />
+          <div className="flex items-center space-x-3.5">
+            {/* Premium Logo Badge */}
+            <div className="relative p-[1.5px] rounded-2xl bg-gradient-to-br from-[#D4FE2B] via-emerald-400 to-[#10B981] shadow-[0_0_22px_rgba(212,254,43,0.35)] transition-transform hover:scale-105 duration-200">
+              <div className="w-11 h-11 rounded-[14px] bg-[#0E1624] flex items-center justify-center relative overflow-hidden backdrop-blur-md">
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#D4FE2B]/15 via-transparent to-emerald-500/20" />
+                <Zap className="w-5 h-5 text-[#D4FE2B] fill-[#D4FE2B] drop-shadow-[0_0_10px_rgba(212,254,43,0.8)] relative z-10" />
+              </div>
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-extrabold tracking-wider text-xl text-white">PADEL PRIME</span>
-                <span className="text-[10px] bg-[#D4FE2B]/15 text-[#D4FE2B] px-2 py-0.5 rounded-full font-bold border border-[#D4FE2B]/30 tracking-widest uppercase">
-                  Club Senayan
+                <span className="font-black tracking-tight text-xl sm:text-2xl text-white">
+                  PADEL<span className="text-[#D4FE2B] ml-1.5 drop-shadow-[0_0_16px_rgba(212,254,43,0.45)]">PRIME</span>
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-[9px] font-black tracking-widest uppercase px-2.5 py-0.5 rounded-full bg-[#D4FE2B]/10 border border-[#D4FE2B]/35 text-[#D4FE2B] backdrop-blur-md shadow-sm">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" /> CLUB SENAYAN
                 </span>
               </div>
-              <p className="text-xs text-slate-400 flex items-center gap-1">
-                <MapPin className="w-3 h-3 text-[#10B981]" /> Gelora Bung Karno, Jakarta Pusat
+              <p className="text-[11px] text-slate-400 flex items-center gap-1.5 mt-0.5 font-medium tracking-wide">
+                <MapPin className="w-3 h-3 text-[#10B981] shrink-0" /> Gelora Bung Karno, Jakarta Pusat
               </p>
             </div>
           </div>
