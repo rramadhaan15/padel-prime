@@ -140,8 +140,8 @@ export default function AvailabilityPage() {
 
   return (
     <div className="min-h-screen bg-[#0B0F17] text-slate-100 flex flex-col font-sans pb-20">
-      {/* Top Navbar */}
-      <header className="border-b border-[#1F2B3E] bg-[#0E1522]/90 backdrop-blur-md sticky top-0 z-40">
+      {/* Transparent Floating Navbar */}
+      <header className="absolute top-0 left-0 right-0 z-40 bg-gradient-to-b from-[#0B0F17]/70 via-transparent to-transparent border-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#D4FE2B] to-[#10B981] flex items-center justify-center shadow-glow">
@@ -163,7 +163,7 @@ export default function AvailabilityPage() {
           <div className="flex items-center space-x-3">
             <button
               onClick={() => router.push("/staff")}
-              className="px-4 py-2 rounded-lg bg-[#182335] hover:bg-[#202E46] text-slate-300 hover:text-white text-xs font-semibold border border-[#253752] transition flex items-center gap-1.5"
+              className="px-4 py-2 rounded-lg bg-[#121A26]/50 hover:bg-[#182334]/80 text-slate-200 hover:text-white text-xs font-semibold border border-white/10 backdrop-blur-md transition flex items-center gap-1.5"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-[#22D3EE]" /> Portal Staf
             </button>
@@ -184,9 +184,6 @@ export default function AvailabilityPage() {
             }}
             className="flex flex-col items-center text-center max-w-4xl mx-auto px-4"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold uppercase tracking-widest mb-4 backdrop-blur-md">
-              <Zap className="w-3.5 h-3.5 text-[#D4FE2B]" /> Jakarta&apos;s Premier Padel Club
-            </div>
 
             <h1 className="bg-gradient-to-br from-slate-100 via-slate-200 to-slate-400 py-2 bg-clip-text text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-transparent">
               Booking Lapangan Padel <br />
