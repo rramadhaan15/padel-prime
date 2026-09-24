@@ -173,9 +173,9 @@ export default function AvailabilityPage() {
 
       {/* Lamp Hero Section */}
       <section className="relative w-full overflow-hidden bg-slate-950 border-b border-[#1F2B3E]">
-        <LampContainer className="pt-24 min-h-[580px] md:min-h-[640px]">
+        <LampContainer className="pt-20 pb-12 min-h-[580px] md:min-h-[640px]" contentClassName="-translate-y-28 sm:-translate-y-36">
           <motion.div
-            initial={{ opacity: 0.5, y: 100 }}
+            initial={{ opacity: 0.5, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{
               delay: 0.2,

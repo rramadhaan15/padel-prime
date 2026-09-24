@@ -7,7 +7,7 @@ export function LampDemo() {
   return (
     <LampContainer>
       <motion.h1
-        initial={{ opacity: 0.5, y: 100 }}
+        initial={{ opacity: 0.5, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{
           delay: 0.3,
@@ -25,9 +25,11 @@ export function LampDemo() {
 export const LampContainer = ({
   children,
   className,
+  contentClassName,
 }: {
   children: React.ReactNode;
   className?: string;
+  contentClassName?: string;
 }) => {
   return (
     <div
@@ -36,7 +38,7 @@ export const LampContainer = ({
         className
       )}
     >
-      <div className="relative flex w-full flex-1 scale-y-125 items-center justify-center isolate z-0 ">
+      <div className="relative flex w-full flex-1 scale-y-125 items-center justify-center isolate z-0 pointer-events-none">
         <motion.div
           initial={{ opacity: 0.5, width: "15rem" }}
           whileInView={{ opacity: 1, width: "30rem" }}
@@ -96,7 +98,7 @@ export const LampContainer = ({
         <div className="absolute inset-auto z-40 h-44 w-full -translate-y-[12.5rem] bg-slate-950 "></div>
       </div>
 
-      <div className="relative z-50 flex -translate-y-80 flex-col items-center px-5">
+      <div className={cn("relative z-50 flex -translate-y-36 md:-translate-y-40 flex-col items-center px-5", contentClassName)}>
         {children}
       </div>
     </div>
