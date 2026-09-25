@@ -321,7 +321,7 @@ export default function StaffPage() {
           </form>
 
           <button
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/booking")}
             className="text-xs text-slate-500 hover:text-slate-300 flex items-center justify-center gap-1 mx-auto"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Kembali ke Kalender Publik

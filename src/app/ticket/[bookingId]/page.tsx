@@ -221,7 +221,7 @@ export default function TicketPage({
       <header className="border-b border-[#1F2B3E] bg-[#0E1522]/90 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
           <button
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/booking")}
             className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition"
           >
             <ArrowLeft className="w-4 h-4" /> Kalender Lapangan

@@ -265,7 +265,7 @@ export default function CheckoutPage({
           {error || "Batas waktu hold 10 menit telah terlewati. Slot telah dilepaskan kembali ke kalender publik untuk menjaga keadilan ketersediaan."}
         </p>
         <button
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/booking")}
           className="px-6 py-3 rounded-xl bg-[#D4FE2B] text-black font-extrabold text-sm hover:brightness-110 transition shadow-glow"
         >
           Kembali ke Kalender Lapangan
@@ -282,7 +282,7 @@ export default function CheckoutPage({
       } backdrop-blur-md`}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <button
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/booking")}
             className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition"
           >
             <ArrowLeft className="w-4 h-4" /> Batal & Kembali
