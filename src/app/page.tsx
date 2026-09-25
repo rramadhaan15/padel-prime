@@ -97,16 +97,6 @@ export default function LandingPage() {
         <div className="absolute top-1/3 right-10 w-[300px] h-[300px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          {/* Top Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#121A26] border border-[#D4FE2B]/30 text-xs font-semibold text-slate-200 mb-6 backdrop-blur-md shadow-sm"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-[#D4FE2B]" />
-            <span className="text-[#D4FE2B] font-bold">Padel Club Senayan</span> &bull; 4 Panoramic Courts Berstandar WPT
-          </motion.div>
 
           {/* Main Headline */}
           <motion.h1
