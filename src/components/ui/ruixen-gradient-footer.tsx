@@ -7,14 +7,14 @@ type Stop = { offset: number; color: string };
 const WIDTH = 1271;
 const HEIGHT = 599;
 const STOPS: Stop[] = [
-  { offset: 0, color: "#340B05" },
-  { offset: 0.1827, color: "#0358F7" },
-  { offset: 0.2837, color: "#5092C7" },
-  { offset: 0.4135, color: "#E1ECFE" },
-  { offset: 0.5866, color: "#FFD400" },
-  { offset: 0.6827, color: "#FA3D1D" },
-  { offset: 0.8029, color: "#FD02F5" },
-  { offset: 1, color: "#FFC0FD00" },
+  { offset: 0, color: "#102A1B" },
+  { offset: 0.1827, color: "#17673F" },
+  { offset: 0.2837, color: "#3FA66C" },
+  { offset: 0.4135, color: "#C9EFA4" },
+  { offset: 0.5866, color: "#D4FE2B" },
+  { offset: 0.6827, color: "#8BCF44" },
+  { offset: 0.8029, color: "#3F7D45" },
+  { offset: 1, color: "#3F7D4500" },
 ];
 
 const clamp = (value: number) => Math.max(0, Math.min(1, value));
