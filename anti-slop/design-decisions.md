@@ -19,3 +19,9 @@ Mode: apply anti-slop during implementation. ENERGY 3 / RHYTHM 3 / MOTION 2.
 - Keyboard focus, labeled selects, pressed filter states, explicit slot statuses, loading messages, retry feedback, and empty results are part of the delivered interface.
 
 The checkout, member portal, staff portal, and backend remain existing application surfaces; the visual delivery gate applies to the changed homepage and booking schedule.
+
+## Footer update
+
+- The user supplied a rainbow gradient footer reference. The gradient is confined to the final viewport band and marks the end of the page; the brand, body text, and navigation above it keep the existing charcoal and lime treatment.
+- The footer links only to existing pages or sections. The reference demo's email form and generic links are omitted because this project has no matching signup flow or destinations.
+- The glow rises with the final stretch of scrolling and does not intercept pointer input. Footer navigation stays above it, with the same visible keyboard focus treatment as the rest of the site.

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { RuixenGradientFooter } from "@/components/ui/ruixen-gradient-footer";
 
 export function SiteHeader({ booking = false }: { booking?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -88,20 +89,38 @@ export function SiteHeader({ booking = false }: { booking?: boolean }) {
 
 export function SiteFooter() {
   return (
-    <footer className="prime-footer prime-container">
-      <Link
-        className="prime-wordmark"
-        href="/"
-        aria-label="Padel Prime, beranda"
-      >
-        PADEL<span>PRIME</span>
-        <span className="wordmark-period">.</span>
-      </Link>
-      <p>Padel Prime Club · Senayan, Jakarta</p>
-      <div>
-        <Link href="/booking">Jadwal main</Link>
-        <Link href="/staff">Portal staf</Link>
+    <RuixenGradientFooter className="prime-footer" gradientHeight="40vh">
+      <div className="prime-container prime-footer-content">
+        <div className="prime-footer-main">
+          <div className="prime-footer-brand">
+            <Link
+              className="prime-wordmark"
+              href="/"
+              aria-label="Padel Prime, beranda"
+            >
+              PADEL<span>PRIME</span>
+              <span className="wordmark-period">.</span>
+            </Link>
+            <p>Pilih waktu mainmu. Sampai ketemu di lapangan.</p>
+          </div>
+          <nav className="prime-footer-nav" aria-label="Navigasi footer">
+            <div>
+              <h2>Jelajahi</h2>
+              <Link href="/#lapangan">Lapangan</Link>
+              <Link href="/#cara-booking">Cara booking</Link>
+              <Link href="/booking">Jadwal main</Link>
+            </div>
+            <div>
+              <h2>Akses</h2>
+              <Link href="/staff">Portal staf</Link>
+            </div>
+          </nav>
+        </div>
+        <div className="prime-footer-bottom">
+          <span>© {new Date().getFullYear()} Padel Prime Club</span>
+          <span>Senayan · Jakarta</span>
+        </div>
       </div>
-    </footer>
+    </RuixenGradientFooter>
   );
 }
