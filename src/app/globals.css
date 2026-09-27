@@ -1099,6 +1099,13 @@ details[open] .details-sign::after {
 .booking-page .prime-footer-content {
   border-top: 1px solid var(--prime-line);
 }
+.booking-entry-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
 
 @keyframes prime-spin {
   to {

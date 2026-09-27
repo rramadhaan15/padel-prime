@@ -4,10 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, CalendarDays, ChevronDown, Clock3 } from "lucide-react";
 import { SiteHeader, SiteFooter } from "@/components/prime/site-shell";
-import { useAvailability } from "@/components/prime/use-availability";
 import {
   bookingDays,
-  formatPrice,
   type CourtFilter,
 } from "@/lib/booking-display";
 
@@ -18,14 +16,6 @@ export default function LandingPage({
 }) {
   const [date, setDate] = useState(days[0].date);
   const [courtType, setCourtType] = useState<CourtFilter>("ALL");
-  const { data, loading, error, refresh } = useAvailability(date);
-  const courts = data?.courts.filter(
-    ({ court }) => courtType === "ALL" || court.type === courtType,
-  );
-  const openSlots =
-    courts
-      ?.flatMap(({ slots }) => slots)
-      .filter((slot) => slot.status === "open") ?? [];
   const bookingUrl = `/booking?date=${date}&type=${courtType}`;
 
   return (
@@ -46,8 +36,8 @@ export default function LandingPage({
               <span>lapangan.</span>
             </h1>
             <p className="hero-description">
-              Ajak partner mainmu. Pilih lapangan dan waktu yang pas, lalu
-              selesaikan reservasi tanpa perlu membuat akun.
+              Ajak partner mainmu. Masuk ke akunmu, pilih lapangan dan waktu
+              yang pas, lalu selesaikan reservasi.
             </p>
             <a className="prime-button primary hero-cta" href="#pilih-jadwal">
               Cari jadwal main <ArrowUpRight size={21} aria-hidden="true" />
@@ -88,7 +78,7 @@ export default function LandingPage({
             <CalendarDays size={24} aria-hidden="true" />
             <div>
               <h2 id="quick-title">Kapan kita main?</h2>
-              <p>Hari ini hingga 7 hari ke depan.</p>
+              <p>Pilih tanggal, lalu masuk untuk melihat jadwal.</p>
             </div>
           </div>
           <div className="quick-fields">
@@ -129,32 +119,7 @@ export default function LandingPage({
             </Link>
           </div>
           <div className="quick-status" aria-live="polite">
-            {loading ? (
-              <span>Memeriksa jadwal yang tersedia...</span>
-            ) : error ? (
-              <>
-                <span>Jadwal belum dapat dimuat.</span>
-                <button onClick={refresh} className="text-action">
-                  Coba lagi
-                </button>
-              </>
-            ) : openSlots.length > 0 ? (
-              <>
-                <span>{openSlots.length} slot tersedia untuk pilihanmu</span>
-                <span>
-                  Mulai{" "}
-                  {formatPrice(
-                    Math.min(...openSlots.map((slot) => slot.price)),
-                  )}{" "}
-                  / sesi
-                </span>
-              </>
-            ) : (
-              <span>
-                Belum ada slot tersedia. Coba tanggal atau tipe lapangan
-                lainnya.
-              </span>
-            )}
+            <span>Masuk atau daftar untuk melihat slot dan harga yang tersedia.</span>
           </div>
         </section>
 
@@ -251,8 +216,8 @@ export default function LandingPage({
               Tinggal siap main.
             </h2>
             <p className="guide-intro">
-              Reservasi langsung dari jadwal. Siapkan nama, email, dan nomor
-              WhatsApp saat checkout.
+              Masuk terlebih dahulu untuk melihat jadwal. Siapkan nama, email,
+              dan nomor WhatsApp saat checkout.
             </p>
             <Link href={bookingUrl} className="text-action">
               Pilih sesi bermain <ArrowUpRight size={19} aria-hidden="true" />

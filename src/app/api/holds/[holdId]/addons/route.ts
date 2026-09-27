@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { bindAddonsToHold } from "@/lib/equipment";
+import { ownsHold } from "@/lib/auth";
 
 const addonsSchema = z.object({
   racketsCount: z.number().int().min(0).max(4),
@@ -13,6 +14,9 @@ export async function POST(
 ) {
   try {
     const { holdId } = await params;
+    if (!ownsHold(request, holdId)) {
+      return NextResponse.json({ success: false, error: "Hold tidak ditemukan." }, { status: 404 });
+    }
     const body = await request.json();
     const parsed = addonsSchema.safeParse(body);
 

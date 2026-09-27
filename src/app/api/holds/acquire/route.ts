@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { acquireSlotHold, SlotConflictError } from "@/lib/holds";
+import { accountFromSession, SESSION_COOKIE } from "@/lib/auth";
 
 const acquireSchema = z.object({
   slotId: z.string().min(1),
@@ -12,6 +13,10 @@ const acquireSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  const account = accountFromSession(request.cookies.get(SESSION_COOKIE)?.value);
+  if (!account) {
+    return NextResponse.json({ success: false, error: "Masuk untuk memilih slot." }, { status: 401 });
+  }
   try {
     const json = await request.json();
     const parsed = acquireSchema.safeParse(json);
@@ -23,7 +28,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await acquireSlotHold(parsed.data);
+    const result = await acquireSlotHold({
+      ...parsed.data,
+      customerId: account.id,
+      customerEmail: account.email,
+    });
     return NextResponse.json({ success: true, data: result });
   } catch (error: unknown) {
     if (error instanceof SlotConflictError) {

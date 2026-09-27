@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateGatewaySignature, processPaymentWebhook, getGatewayLedgerEntry } from "@/lib/payments";
+import { ownsHold } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
     const { orderId } = await request.json();
     if (!orderId) {
       return NextResponse.json({ success: false, error: "Missing orderId" }, { status: 400 });
+    }
+
+    if (typeof orderId !== "string" || !orderId.startsWith("PAY-") || !ownsHold(request, orderId.slice(4))) {
+      return NextResponse.json({ success: false, error: "Pembayaran tidak ditemukan." }, { status: 404 });
     }
 
     const entry = getGatewayLedgerEntry(orderId);

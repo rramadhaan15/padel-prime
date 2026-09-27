@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createPaymentTransaction } from "@/lib/payments";
+import { ownsHold } from "@/lib/auth";
 
 const initiateSchema = z.object({
   holdId: z.string().min(1),
@@ -20,6 +21,10 @@ export async function POST(request: NextRequest) {
         { success: false, error: "Validation failed", details: parsed.error.format() },
         { status: 400 }
       );
+    }
+
+    if (!ownsHold(request, parsed.data.holdId)) {
+      return NextResponse.json({ success: false, error: "Hold tidak ditemukan." }, { status: 404 });
     }
 
     const result = await createPaymentTransaction(parsed.data);

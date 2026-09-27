@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getHoldStatus, releaseSlotHold } from "@/lib/holds";
+import { ownsHold } from "@/lib/auth";
 
 export async function GET(
   request: NextRequest,
@@ -7,6 +8,9 @@ export async function GET(
 ) {
   try {
     const { holdId } = await params;
+    if (!ownsHold(request, holdId)) {
+      return NextResponse.json({ success: false, error: "Hold tidak ditemukan." }, { status: 404 });
+    }
     const status = getHoldStatus(holdId);
 
     if (!status.isValid) {
@@ -29,6 +33,9 @@ export async function DELETE(
 ) {
   try {
     const { holdId } = await params;
+    if (!ownsHold(request, holdId)) {
+      return NextResponse.json({ success: false, error: "Hold tidak ditemukan." }, { status: 404 });
+    }
     const released = await releaseSlotHold(holdId);
 
     return NextResponse.json({ success: released });

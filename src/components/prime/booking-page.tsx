@@ -83,6 +83,11 @@ export default function BookingDashboardPage({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ slotId: slot.id, courtId: slot.courtId }),
       });
+      if (response.status === 401) {
+        navigating = true;
+        router.push(`/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}`);
+        return;
+      }
       const json = await response.json();
       if (!response.ok || !json.success || !json.data?.holdId) {
         setHoldError(
@@ -102,6 +107,16 @@ export default function BookingDashboardPage({
         holdPending.current = false;
         setHoldingSlotId(null);
       }
+    }
+  }
+
+  async function logout() {
+    try {
+      const response = await fetch("/api/auth/logout", { method: "POST" });
+      if (response.ok) window.location.assign("/");
+      else setHoldError("Belum dapat keluar. Silakan coba lagi.");
+    } catch {
+      setHoldError("Koneksi terputus saat keluar. Silakan coba lagi.");
     }
   }
 
@@ -131,9 +146,14 @@ export default function BookingDashboardPage({
     <div className="prime-site booking-page">
       <SiteHeader booking />
       <main id="main-content" className="prime-container booking-main">
-        <Link className="back-link" href="/">
-          <ArrowLeft size={16} aria-hidden="true" /> Kembali ke beranda
-        </Link>
+        <div className="booking-entry-actions">
+          <Link className="back-link" href="/">
+            <ArrowLeft size={16} aria-hidden="true" /> Kembali ke beranda
+          </Link>
+          <button type="button" className="back-link" onClick={logout}>
+            Keluar dari akun
+          </button>
+        </div>
         <div className="booking-heading">
           <div>
             <p className="eyebrow">Reservasi lapangan</p>
