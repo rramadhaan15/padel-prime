@@ -17,6 +17,7 @@ export default function ImageSliderLoginDemo({ next = "/booking" }: { next?: str
   const [mode, setMode] = useState<"login" | "register">("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -30,7 +31,7 @@ export default function ImageSliderLoginDemo({ next = "/booking" }: { next?: str
       const response = await fetch(`/api/auth/${mode}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, phone, password }),
       });
       const result: { success?: boolean; error?: string } = await response.json();
       if (!response.ok || !result.success) {
@@ -98,6 +99,22 @@ export default function ImageSliderLoginDemo({ next = "/booking" }: { next?: str
                   className="bg-[#182334] border-[#506176] text-white placeholder:text-slate-400 focus-visible:ring-[#D4FE2B] h-11"
                 />
               </div>
+              {mode === "register" && (
+                <div className="space-y-1.5">
+                  <Label htmlFor="phone" className="text-sm text-slate-200">Nomor WhatsApp</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    autoComplete="tel"
+                    inputMode="tel"
+                    placeholder="081234567890"
+                    value={phone}
+                    onChange={(event) => setPhone(event.target.value)}
+                    required
+                    className="bg-[#182334] border-[#506176] text-white placeholder:text-slate-400 focus-visible:ring-[#D4FE2B] h-11"
+                  />
+                </div>
+              )}
               <div className="space-y-1.5">
                 <Label htmlFor="password" className="text-sm text-slate-200">Kata sandi</Label>
                 <Input

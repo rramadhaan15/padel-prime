@@ -14,6 +14,7 @@ type Account = {
   id: string;
   name: string;
   email: string;
+  phone?: string;
   passwordHash: string;
 };
 type Session = { accountId: string; expiresAt: number };
@@ -68,7 +69,7 @@ function verifyPassword(password: string, stored: string) {
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 const sessionKey = (token: string) => createHash("sha256").update(token).digest("hex");
 
-export function registerAccount(name: string, email: string, password: string) {
+export function registerAccount(name: string, email: string, password: string, phone: string) {
   const store = readStore();
   const normalized = normalizeEmail(email);
   if (store.accounts[normalized]) return null;
@@ -76,17 +77,27 @@ export function registerAccount(name: string, email: string, password: string) {
     id: randomBytes(16).toString("hex"),
     name: name.trim(),
     email: normalized,
+    phone,
     passwordHash: hashPassword(password),
   };
   store.accounts[normalized] = account;
   writeStore(store);
-  return { id: account.id, name: account.name, email: account.email };
+  return { id: account.id, name: account.name, email: account.email, phone: account.phone };
+}
+
+export function updateAccountPhone(accountId: string, phone: string) {
+  const store = readStore();
+  const account = Object.values(store.accounts).find((item) => item.id === accountId);
+  if (!account) return null;
+  account.phone = phone;
+  writeStore(store);
+  return { id: account.id, name: account.name, email: account.email, phone: account.phone };
 }
 
 export function verifyAccount(email: string, password: string) {
   const account = readStore().accounts[normalizeEmail(email)];
   if (!account || !verifyPassword(password, account.passwordHash)) return null;
-  return { id: account.id, name: account.name, email: account.email };
+  return { id: account.id, name: account.name, email: account.email, phone: account.phone };
 }
 
 export function createSession(accountId: string) {
@@ -113,7 +124,7 @@ export function accountFromSession(token: string | undefined) {
   const session = store.sessions[sessionKey(token)];
   if (!session || session.expiresAt <= Date.now()) return null;
   const account = Object.values(store.accounts).find((item) => item.id === session.accountId);
-  return account ? { id: account.id, name: account.name, email: account.email } : null;
+  return account ? { id: account.id, name: account.name, email: account.email, phone: account.phone } : null;
 }
 
 export async function currentAccount() {

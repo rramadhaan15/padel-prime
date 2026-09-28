@@ -12,7 +12,7 @@ At the same time, club operators struggle with operational chaos. Stated court a
 
 A responsive, high-integrity booking platform for a single-venue padel club that operates on discrete, fixed schedule slots and a robust concurrency model:
 
-1. **Deterministic Inventory & Fast Checkout**: Customers create an account or sign in before viewing real-time court availability across morning, evening, and weekend time bands within a rolling 7-day window. Checkout collects the contact details needed for the booking.
+1. **Deterministic Inventory & Fast Checkout**: Customers create an account or sign in before viewing real-time court availability across morning, evening, and weekend time bands within a rolling 7-day window. Checkout uses the customer's account name, email, and WhatsApp number for the booking.
 2. **Pessimistic Hold with Zero Double-Booking**: Selecting a slot initiates a 10-minute temporary lock backed by a distributed locking mechanism. An automated background worker combined with active payment inquiry guarantees that expired holds are released promptly without conflicting with late payment webhooks.
 3. **Integrated Add-on Equipment Management**: Customers can bundle racket rentals and ball purchases directly into their booking, bound by a time-bucket equipment pool that enforces strict per-slot rental caps so on-site physical stock never runs out.
 4. **Reschedule-Only Self-Service**: Customers can modify confirmed bookings up to 24 hours prior to game time. Asymmetrical price adjustments ensure that moving to a higher-tier time band requires an instant delta payment, while downgrades forfeit the difference, entirely eliminating cash refunds.
@@ -25,7 +25,7 @@ A responsive, high-integrity booking platform for a single-venue padel club that
 3. As a Customer, I want to see clear pricing for each Schedule Slot based on its Time Band (Regular vs. Peak) and Court type (Indoor vs. Outdoor), so that I know the exact cost before reserving.
 4. As a Customer, I want selecting a Schedule Slot to place an immediate 10-minute Slot Hold on that slot, so that no other customer can book it while I complete my details.
 5. As a Customer, I want to see a live 10-minute countdown timer on the checkout screen, so that I know how much time remains before my Slot Hold expires.
-6. As a Customer, I want to create an account with my name, email, and password before booking, then provide the contact details needed at checkout, so that my booking starts from an authenticated session.
+6. As a Customer, I want to create an account with my name, email, WhatsApp number, and password before booking, so that checkout can use my saved contact details without asking me to enter them again. Existing accounts without a WhatsApp number provide it once and save it to their account.
 7. As a Customer, I want to add racket rentals and ball purchases as Add-ons during checkout, so that my equipment is guaranteed and prepared before I arrive at the Venue.
 8. As a Customer, I want the system to restrict my racket rental Add-ons to a maximum of 4 rackets per Schedule Slot, so that I do not accidentally over-rent equipment for a single court.
 9. As a Customer, I want to see an out-of-stock indicator when the Venue's Equipment Pool for my chosen time slot is exhausted, so that I am not charged for unavailable rental gear.

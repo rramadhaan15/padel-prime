@@ -15,5 +15,5 @@ export default async function ProtectedCheckoutPage({
   const { holdId } = await params;
   const hold = getHoldStatus(holdId).hold;
   if (!hold || hold.customerId !== account.id) notFound();
-  return <CheckoutPage params={params} />;
+  return <CheckoutPage params={params} account={account} />;
 }

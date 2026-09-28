@@ -49,8 +49,10 @@ interface HoldData {
 
 export default function CheckoutPage({
   params,
+  account,
 }: {
   params: Promise<{ holdId: string }>;
+  account: { name: string; email: string; phone?: string };
 }) {
   const router = useRouter();
   const { holdId } = use(params);
@@ -60,10 +62,11 @@ export default function CheckoutPage({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Form state
-  const [customerName, setCustomerName] = useState("");
-  const [customerEmail, setCustomerEmail] = useState("");
-  const [customerPhone, setCustomerPhone] = useState("");
+  const [accountPhone, setAccountPhone] = useState(account.phone);
+  const [phoneInput, setPhoneInput] = useState("");
+  const [savingPhone, setSavingPhone] = useState(false);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
+  const [initiatingPayment, setInitiatingPayment] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<"QRIS" | "VA_BCA" | "VA_MANDIRI">("QRIS");
 
   // Add-ons state
@@ -160,20 +163,14 @@ export default function CheckoutPage({
 
   const handleInitiatePayment = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!customerName || !customerEmail || !customerPhone) {
-      alert("Harap lengkapi semua data tamu terlebih dahulu.");
-      return;
-    }
-
+    if (!accountPhone || initiatingPayment) return;
+    setInitiatingPayment(true);
     try {
       const res = await fetch("/api/checkout/initiate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           holdId,
-          customerName,
-          customerEmail,
-          customerPhone,
           paymentMethod,
         }),
       });
@@ -194,6 +191,30 @@ export default function CheckoutPage({
       }
     } catch {
       alert("Terjadi kesalahan jaringan.");
+    } finally {
+      setInitiatingPayment(false);
+    }
+  };
+
+  const handleSavePhone = async () => {
+    setSavingPhone(true);
+    setPhoneError(null);
+    try {
+      const response = await fetch("/api/auth/phone", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: phoneInput }),
+      });
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        setPhoneError(result.error || "Nomor WhatsApp belum tersimpan.");
+        return;
+      }
+      setAccountPhone(result.data.phone);
+    } catch {
+      setPhoneError("Koneksi terputus. Coba lagi.");
+    } finally {
+      setSavingPhone(false);
     }
   };
 
@@ -305,7 +326,7 @@ export default function CheckoutPage({
       <div className="max-w-5xl mx-auto px-4 sm:px-6 mt-8">
         <div className="mb-6">
           <span className="text-xs font-bold text-[#D4FE2B] uppercase tracking-widest">
-            Frictionless Guest Checkout
+            Checkout Akun
           </span>
           <h1 className="text-2xl sm:text-3xl font-black text-white mt-1">
             Konfirmasi & Pembayaran Slot
@@ -438,59 +459,40 @@ export default function CheckoutPage({
               </div>
             </div>
 
-            {/* Guest Details Form */}
+            {/* Account details and payment method */}
             {!paymentInitiated && (
               <form onSubmit={handleInitiatePayment} className="bg-[#121A26] border border-[#1F2B3E] rounded-2xl p-5 space-y-4">
                 <div>
-                  <h3 className="font-extrabold text-white text-base">Data Pemesan (Guest Identity)</h3>
+                  <h3 className="font-extrabold text-white text-base">Data Pemesan</h3>
                   <p className="text-xs text-slate-400">
-                    Tiket digital dan invoice akan dikirim langsung ke WhatsApp & Email Anda tanpa perlu password.
+                    Data diambil dari akun Anda. Tiket dikirim ke WhatsApp dan invoice ke email berikut.
                   </p>
                 </div>
 
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-xs font-semibold text-slate-300 block mb-1">
-                      Nama Lengkap Pemesan *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Contoh: Budi Santoso"
-                      value={customerName}
-                      onChange={(e) => setCustomerName(e.target.value)}
-                      className="w-full bg-[#182334] border border-[#253752] focus:border-[#D4FE2B] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none transition"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold text-slate-300 block mb-1">
-                      Alamat Email (Untuk Invoice PDF) *
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="budi@example.com"
-                      value={customerEmail}
-                      onChange={(e) => setCustomerEmail(e.target.value)}
-                      className="w-full bg-[#182334] border border-[#253752] focus:border-[#D4FE2B] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none transition"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold text-slate-300 block mb-1">
-                      Nomor WhatsApp (Format E.164 / Lokal) *
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="08123456789 atau +628123456789"
-                      value={customerPhone}
-                      onChange={(e) => setCustomerPhone(e.target.value)}
-                      className="w-full bg-[#182334] border border-[#253752] focus:border-[#D4FE2B] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none transition"
-                    />
-                  </div>
+                <div className="space-y-2 text-sm bg-[#182334] border border-[#253752] rounded-lg p-4">
+                  <div><span className="text-slate-400">Nama</span><p className="font-semibold text-white break-words">{account.name}</p></div>
+                  <div><span className="text-slate-400">Email</span><p className="font-semibold text-white break-all">{account.email}</p></div>
+                  {accountPhone && <div><span className="text-slate-400">WhatsApp</span><p className="font-semibold text-white">{accountPhone}</p></div>}
                 </div>
+
+                {!accountPhone && (
+                  <div className="space-y-2 text-sm">
+                    <p className="text-slate-300">Akun ini belum memiliki nomor WhatsApp. Simpan sekali untuk pengiriman tiket dan pemesanan berikutnya.</p>
+                    <label htmlFor="account-phone" className="text-xs font-semibold text-slate-300 block">Nomor WhatsApp</label>
+                    <input
+                      id="account-phone"
+                      type="tel"
+                      autoComplete="tel"
+                      inputMode="tel"
+                      placeholder="081234567890"
+                      value={phoneInput}
+                      onChange={(e) => setPhoneInput(e.target.value)}
+                      className="w-full bg-[#182334] border border-[#253752] focus:border-[#D4FE2B] rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none transition"
+                    />
+                    {phoneError && <p role="alert" className="text-red-300 text-xs">{phoneError}</p>}
+                    <button type="button" disabled={savingPhone || !phoneInput.trim()} onClick={handleSavePhone} className="px-4 py-2 rounded-lg bg-[#253752] text-white font-semibold disabled:opacity-50">{savingPhone ? "Menyimpan..." : "Simpan ke akun"}</button>
+                  </div>
+                )}
 
                 {/* Payment Method Radio */}
                 <div className="pt-2">
@@ -550,9 +552,10 @@ export default function CheckoutPage({
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-xl bg-[#D4FE2B] text-black font-extrabold text-sm hover:brightness-110 transition shadow-glow flex items-center justify-center gap-2 mt-4"
+                  disabled={!accountPhone || initiatingPayment}
+                  className="w-full py-3.5 rounded-xl bg-[#D4FE2B] text-black font-extrabold text-sm hover:brightness-110 transition shadow-glow flex items-center justify-center gap-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Lanjut ke Pembayaran <ChevronRight className="w-4 h-4" />
+                  {initiatingPayment ? "Memproses..." : "Lanjut ke Pembayaran"} <ChevronRight className="w-4 h-4" />
                 </button>
               </form>
             )}

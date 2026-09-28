@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createPaymentTransaction } from "@/lib/payments";
-import { ownsHold } from "@/lib/auth";
+import { accountForRequest, ownsHold } from "@/lib/auth";
 
 const initiateSchema = z.object({
   holdId: z.string().min(1),
-  customerName: z.string().min(2, "Name must be at least 2 characters"),
-  customerEmail: z.string().email("Valid email is required"),
-  customerPhone: z.string().min(8, "Valid phone number is required"),
   paymentMethod: z.enum(["QRIS", "VA_BCA", "VA_MANDIRI"]),
 });
 
@@ -27,7 +24,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: "Hold tidak ditemukan." }, { status: 404 });
     }
 
-    const result = await createPaymentTransaction(parsed.data);
+    const account = accountForRequest(request);
+    if (!account?.phone) {
+      return NextResponse.json({ success: false, error: "Lengkapi nomor WhatsApp akun terlebih dahulu." }, { status: 400 });
+    }
+
+    const result = await createPaymentTransaction({
+      ...parsed.data,
+      customerName: account.name,
+      customerEmail: account.email,
+      customerPhone: account.phone,
+    });
     return NextResponse.json({ success: true, data: result });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Failed to initiate payment transaction";
