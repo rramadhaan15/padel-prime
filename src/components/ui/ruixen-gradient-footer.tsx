@@ -43,7 +43,7 @@ export interface RuixenGradientFooterProps {
 export function RuixenGradientFooter({
   children,
   gradientHeight = "40vh",
-  minReveal = 0.045,
+  minReveal = 0,
   bars = 9,
   blur = 15,
   peak = 0.98,
