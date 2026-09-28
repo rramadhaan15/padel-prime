@@ -11,11 +11,10 @@ import {
   CircleAlert,
   Check,
   LockKeyhole,
-  UserRound,
 } from "lucide-react";
 import Link from "next/link";
 import { SiteHeader, SiteFooter } from "@/components/prime/site-shell";
-import { LogoutButton } from "@/components/prime/logout-button";
+import type { ProfileIdentity } from "@/components/ui/profile-dropdown";
 import { useAvailability } from "@/components/prime/use-availability";
 import {
   bookingDays,
@@ -50,8 +49,10 @@ function matchesTime(slot: AvailabilitySlot, time: TimeFilter) {
 
 export default function BookingDashboardPage({
   days,
+  account,
 }: {
   days: ReturnType<typeof bookingDays>;
+  account: ProfileIdentity;
 }) {
   const router = useRouter();
   const [date, setDate] = useState(days[0].date);
@@ -136,18 +137,12 @@ export default function BookingDashboardPage({
 
   return (
     <div className="prime-site booking-page">
-      <SiteHeader booking />
+      <SiteHeader booking account={account} />
       <main id="main-content" className="prime-container booking-main">
         <div className="booking-entry-actions">
           <Link className="back-link" href="/">
             <ArrowLeft size={16} aria-hidden="true" /> Kembali ke beranda
           </Link>
-          <div className="booking-account-actions">
-            <Link className="back-link" href="/profil">
-              <UserRound size={16} aria-hidden="true" /> Profil saya
-            </Link>
-            <LogoutButton />
-          </div>
         </div>
         <div className="booking-heading">
           <div>

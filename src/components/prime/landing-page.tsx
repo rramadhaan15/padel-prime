@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, CalendarDays, ChevronDown, Clock3 } from "lucide-react";
 import { SiteHeader, SiteFooter } from "@/components/prime/site-shell";
+import type { ProfileIdentity } from "@/components/ui/profile-dropdown";
 import {
   bookingDays,
   type CourtFilter,
@@ -11,8 +12,10 @@ import {
 
 export default function LandingPage({
   days,
+  account,
 }: {
   days: ReturnType<typeof bookingDays>;
+  account: ProfileIdentity | null;
 }) {
   const [date, setDate] = useState(days[0].date);
   const [courtType, setCourtType] = useState<CourtFilter>("ALL");
@@ -20,7 +23,7 @@ export default function LandingPage({
 
   return (
     <div className="prime-site">
-      <SiteHeader />
+      <SiteHeader account={account} />
       <main id="main-content">
         <section
           className="prime-hero prime-container"

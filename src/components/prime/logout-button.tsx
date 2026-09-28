@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
-export function LogoutButton({ className = "back-link" }: { className?: string }) {
+export function LogoutButton({ className = "back-link", icon }: { className?: string; icon?: ReactNode }) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,6 +27,7 @@ export function LogoutButton({ className = "back-link" }: { className?: string }
   return (
     <div className="logout-control">
       <button type="button" className={className} onClick={logout} disabled={pending}>
+        {icon}
         {pending ? "Sedang keluar..." : "Keluar dari akun"}
       </button>
       {error && <span className="logout-error" role="alert">{error}</span>}

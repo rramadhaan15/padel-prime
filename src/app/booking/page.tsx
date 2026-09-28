@@ -10,7 +10,8 @@ export default async function BookingPage({
 }: {
   searchParams: Promise<{ date?: string; type?: string }>;
 }) {
-  if (!(await currentAccount())) {
+  const account = await currentAccount();
+  if (!account) {
     const { date, type } = await searchParams;
     const next = new URLSearchParams();
     if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) next.set("date", date);
@@ -18,5 +19,5 @@ export default async function BookingPage({
     const destination = `/booking${next.size ? `?${next}` : ""}`;
     redirect(`/login?next=${encodeURIComponent(destination)}`);
   }
-  return <BookingDashboardPage days={bookingDays()} />;
+  return <BookingDashboardPage days={bookingDays()} account={account} />;
 }

@@ -14,7 +14,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="prime-site account-page">
-      <SiteHeader booking />
+      <SiteHeader booking account={account} />
       <main id="main-content" className="prime-container account-main">
         <Link className="back-link" href="/booking">
           <ArrowLeft size={16} aria-hidden="true" /> Kembali ke jadwal main

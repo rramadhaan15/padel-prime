@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { RuixenGradientFooter } from "@/components/ui/ruixen-gradient-footer";
+import { ProfileDropdown, type ProfileIdentity } from "@/components/ui/profile-dropdown";
 
-export function SiteHeader({ booking = false }: { booking?: boolean }) {
+export function SiteHeader({ booking = false, account }: { booking?: boolean; account?: ProfileIdentity | null }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const toggle = useRef<HTMLButtonElement>(null);
 
@@ -50,6 +51,7 @@ export function SiteHeader({ booking = false }: { booking?: boolean }) {
             >
               {booking ? "Beranda" : "Booking lapangan"}
             </Link>
+            {account && <ProfileDropdown account={account} />}
             <button
               className="menu-toggle"
               ref={toggle}
