@@ -1106,6 +1106,95 @@ details[open] .details-sign::after {
   flex-wrap: wrap;
   gap: 8px 24px;
 }
+.booking-account-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+}
+.logout-control {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.logout-error {
+  max-width: 280px;
+  color: #ffb4a9;
+  font-size: 0.8rem;
+}
+.account-main {
+  max-width: 960px;
+  min-height: 65vh;
+  padding-block: 22px 88px;
+}
+.account-heading {
+  margin-block: 50px 40px;
+}
+.account-heading h1 {
+  margin-block: 12px 16px;
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+}
+.account-heading h1 span {
+  color: var(--prime-accent);
+}
+.account-heading > p:last-child,
+.account-details-intro p,
+.account-session p {
+  color: var(--prime-muted);
+  font-size: 0.9375rem;
+}
+.account-details,
+.account-session {
+  border-top: 1px solid var(--prime-line);
+  padding-block: 28px;
+}
+.account-details h2,
+.account-session h2 {
+  margin-bottom: 8px;
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+}
+.account-details dl {
+  margin: 28px 0 0;
+}
+.account-details dl > div {
+  display: grid;
+  gap: 4px;
+  padding-block: 18px;
+  border-top: 1px solid var(--prime-line);
+}
+.account-details dt {
+  color: var(--prime-muted);
+  font-size: 0.875rem;
+}
+.account-details dd {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.account-session .logout-control {
+  margin-top: 20px;
+}
+.account-page .prime-footer-content {
+  border-top: 1px solid var(--prime-line);
+}
+@media (min-width: 700px) {
+  .account-details dl > div {
+    grid-template-columns: minmax(170px, 1fr) 2fr;
+    align-items: baseline;
+  }
+  .account-session {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .account-session .logout-control {
+    margin-top: 0;
+    flex-shrink: 0;
+  }
+}
 
 @keyframes prime-spin {
   to {

@@ -10,7 +10,7 @@ export default async function LoginPage({
   searchParams: Promise<{ next?: string }>;
 }) {
   const requested = (await searchParams).next;
-  const next = requested?.startsWith("/booking") && !requested.startsWith("//")
+  const next = requested === "/profil" || (requested?.startsWith("/booking") && !requested.startsWith("//"))
     ? requested
     : "/booking";
   if (await currentAccount()) redirect(next);

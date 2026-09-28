@@ -11,9 +11,11 @@ import {
   CircleAlert,
   Check,
   LockKeyhole,
+  UserRound,
 } from "lucide-react";
 import Link from "next/link";
 import { SiteHeader, SiteFooter } from "@/components/prime/site-shell";
+import { LogoutButton } from "@/components/prime/logout-button";
 import { useAvailability } from "@/components/prime/use-availability";
 import {
   bookingDays,
@@ -110,16 +112,6 @@ export default function BookingDashboardPage({
     }
   }
 
-  async function logout() {
-    try {
-      const response = await fetch("/api/auth/logout", { method: "POST" });
-      if (response.ok) window.location.assign("/");
-      else setHoldError("Belum dapat keluar. Silakan coba lagi.");
-    } catch {
-      setHoldError("Koneksi terputus saat keluar. Silakan coba lagi.");
-    }
-  }
-
   const courts =
     data?.courts
       .filter(({ court }) => courtType === "ALL" || court.type === courtType)
@@ -150,9 +142,12 @@ export default function BookingDashboardPage({
           <Link className="back-link" href="/">
             <ArrowLeft size={16} aria-hidden="true" /> Kembali ke beranda
           </Link>
-          <button type="button" className="back-link" onClick={logout}>
-            Keluar dari akun
-          </button>
+          <div className="booking-account-actions">
+            <Link className="back-link" href="/profil">
+              <UserRound size={16} aria-hidden="true" /> Profil saya
+            </Link>
+            <LogoutButton />
+          </div>
         </div>
         <div className="booking-heading">
           <div>
