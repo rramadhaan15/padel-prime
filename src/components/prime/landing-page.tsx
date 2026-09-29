@@ -141,10 +141,6 @@ export default function LandingPage({
                   Sama serunya.
                 </h2>
               </div>
-              <p>
-                Lebih suka bermain di dalam atau di luar ruangan? Tentukan
-                pilihanmu, lalu cek jam yang masih tersedia.
-              </p>
             </div>
             <div className="court-editorial">
               <div className="court-intro">
