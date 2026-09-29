@@ -94,7 +94,7 @@ export default function BookingDashboardPage({
       const json = await response.json();
       if (!response.ok || !json.success || !json.data?.holdId) {
         setHoldError(
-          "Slot belum berhasil diamankan. Jadwal telah diperbarui; silakan pilih slot yang tersedia.",
+          "Slot belum berhasil diamankan; jadwal telah diperbarui, silakan pilih slot yang tersedia",
         );
         refresh();
         return;
@@ -103,7 +103,7 @@ export default function BookingDashboardPage({
       router.push(`/checkout/${json.data.holdId}`);
     } catch {
       setHoldError(
-        "Koneksi terputus saat memilih slot. Muat ulang jadwal sebelum mencoba lagi.",
+        "Koneksi terputus saat memilih slot; muat ulang jadwal sebelum mencoba lagi",
       );
     } finally {
       if (!navigating) {
@@ -148,22 +148,22 @@ export default function BookingDashboardPage({
           <div>
             <p className="eyebrow">Reservasi lapangan</p>
             <h1>
-              Atur waktu.
+              Atur waktu
               <br />
-              <span>Siapkan permainan.</span>
+              <span>Siapkan permainan</span>
             </h1>
             <p>
-              Pilih sesi yang tersedia. Kamu punya 10 menit untuk menyelesaikan
-              checkout setelah slot berhasil diamankan.
+              Pilih sesi yang tersedia, lalu selesaikan checkout dalam 10 menit
+              setelah slot berhasil diamankan
             </p>
           </div>
           <div className="session-note">
             <Clock3 size={24} aria-hidden="true" />
             <strong>90 menit</strong>
             <span>
-              Waktu untuk setiap sesi.
+              Waktu untuk setiap sesi
               <br />
-              Semua jadwal dalam WIB.
+              Semua jadwal dalam WIB
             </span>
           </div>
         </div>
@@ -234,7 +234,7 @@ export default function BookingDashboardPage({
               <h2 id="results-title">{selectedDay.fullLabel}</h2>
               <p aria-live="polite">
                 {loading
-                  ? "Memeriksa ketersediaan..."
+                  ? "Memeriksa ketersediaan"
                   : error
                     ? "Ketersediaan belum diketahui"
                     : `${openCount} slot tersedia sesuai filter`}
@@ -281,14 +281,14 @@ export default function BookingDashboardPage({
           )}
           {holdingSlotId && (
             <p role="status" className="hold-status">
-              Sedang mengamankan slot dan membuka checkout...
+              Sedang mengamankan slot dan membuka checkout
             </p>
           )}
           {loading ? (
             <div className="schedule-state" role="status">
               <span className="loading-spinner" />
               <h3>Menyiapkan jadwal mainmu</h3>
-              <p>Sebentar, kami sedang memeriksa slot lapangan.</p>
+              <p>Sebentar, kami sedang memeriksa slot lapangan</p>
             </div>
           ) : error ? (
             <div className="schedule-state" role="alert">
@@ -304,7 +304,7 @@ export default function BookingDashboardPage({
               <CalendarDays size={30} aria-hidden="true" />
               <h3>Belum ada sesi untuk pilihan ini</h3>
               <p>
-                Coba tanggal lain atau tampilkan semua tipe lapangan dan jam.
+                Coba tanggal lain atau tampilkan semua tipe lapangan dan jam
               </p>
               <button
                 className="prime-button primary"
@@ -359,7 +359,7 @@ export default function BookingDashboardPage({
                           <span className="slot-bottom">
                             <span>
                               {holdingSlotId === slot.id
-                                ? "Mengamankan..."
+                                ? "Mengamankan"
                                 : statusLabels[slot.status]}
                             </span>
                             {slot.status === "open" ? (
@@ -384,11 +384,11 @@ export default function BookingDashboardPage({
         <aside className="booking-policy">
           <Clock3 size={21} aria-hidden="true" />
           <div>
-            <h2>Satu pilihan, satu sesi main.</h2>
+            <h2>Satu pilihan, satu sesi main</h2>
             <p>
-              Harga yang tertera adalah tarif per sesi. Sewa raket dan bola bisa
-              ditambahkan saat checkout. Perubahan jadwal paling lambat 24 jam
-              sebelum waktu main.
+              Harga yang tertera adalah tarif per sesi; sewa raket dan bola bisa
+              ditambahkan saat checkout, dan perubahan jadwal paling lambat 24 jam
+              sebelum waktu main
             </p>
           </div>
         </aside>
