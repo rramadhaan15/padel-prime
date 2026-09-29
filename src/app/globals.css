@@ -1369,6 +1369,11 @@ details[open] .details-sign::after {
   .hero-photo {
     animation: prime-enter 0.8s ease-out both;
   }
+  .booking-main,
+  .courts-section:target > .prime-container,
+  .booking-guide:target > div {
+    animation: prime-enter 0.4s ease-out both;
+  }
   .court-schedules {
     animation: prime-enter 0.25s ease-out;
   }
