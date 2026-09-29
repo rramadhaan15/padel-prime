@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
-import { CalendarDays, ChevronDown, UserRound, LogOut } from "lucide-react";
+import { CalendarDays, ChevronDown, UserRound, LogOut, ClipboardList } from "lucide-react";
 import { LogoutButton } from "@/components/prime/logout-button";
 
 export type ProfileIdentity = { name: string; email: string };
@@ -68,6 +68,9 @@ export function ProfileDropdown({ account }: { account: ProfileIdentity }) {
           <nav aria-label="Menu akun">
             <Link href="/profil" onClick={() => setOpen(false)}>
               <UserRound size={18} aria-hidden="true" /> Profil saya
+            </Link>
+            <Link href="/pesanan" onClick={() => setOpen(false)}>
+              <ClipboardList size={18} aria-hidden="true" /> Booking saya
             </Link>
             <Link href="/booking" onClick={() => setOpen(false)}>
               <CalendarDays size={18} aria-hidden="true" /> Jadwal main
